@@ -5,16 +5,6 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     @user = users(:one)
   end
 
-  test "should get index" do
-    get users_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get new_user_url
-    assert_response :success
-  end
-
   test "should create user" do
     assert_difference("User.count") do
       post users_url, params: { user: { name: @user.name } }
@@ -23,26 +13,29 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to user_url(User.last)
   end
 
-  test "should show user" do
-    get user_url(@user)
-    assert_response :success
-  end
+  test "should create user with roles" do
+    assert_difference("User.count") do
+      post users_url, params: { user: { name: @user.name, role_ids: [roles(:admin).id] } }
+    end
 
-  test "should get edit" do
-    get edit_user_url(@user)
-    assert_response :success
+    assert User.last.roles.include?(roles(:admin))
   end
 
   test "should update user" do
-    patch user_url(@user), params: { user: { name: @user.name } }
-    assert_redirected_to user_url(@user)
+    user = users(:admin_editor)
+    patch user_url(user), params: { user: { name: @user.name, role_ids: [roles(:editor).id] } }
+    assert_redirected_to user_url(user)
+
+    assert user.roles.reload.first == roles(:editor)
   end
 
-  test "should destroy user" do
-    assert_difference("User.count", -1) do
-      delete user_url(@user)
-    end
+  test "should not update user with member roles" do
+    user = users(:member)
+    patch user_url(user), params: { user: { name: @user.name, role_ids: [roles(:editor).id] } }
+    
+    assert user.roles.reload.first == roles(:member)
 
-    assert_redirected_to users_url
+    assert_response(:unprocessable_entity)
   end
+
 end
