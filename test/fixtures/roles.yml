@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+admin:
+  name: admin
+
+member:
+  name: member
+
+member_vip:
+  name: member_vip
+
+editor:
+  name: editor

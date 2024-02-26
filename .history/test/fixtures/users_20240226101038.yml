@@ -1,0 +1,16 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: One
+
+admin_editor:
+  name: admin_member
+  roles:
+    - admin
+    - editor
+
+member:
+  name: member
+  roles:
+    - member
+
